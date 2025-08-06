@@ -1,4 +1,4 @@
-streamlit==1.30.0
-pandas==2.2.2
-folium==0.15.1
-streamlit-folium==0.18.0
+streamlit
+pandas
+folium
+streamlit-folium
