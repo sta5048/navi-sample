@@ -13,7 +13,7 @@ st.markdown("---")
 @st.cache_data
 def load_data():
     df = pd.read_csv("daejeon_map.csv", encoding="utf-8-sig")
-    return df.head(10)  # 샘플 10개만 사용
+    return df
 
 df = load_data()
 df.columns = df.columns.str.strip()
