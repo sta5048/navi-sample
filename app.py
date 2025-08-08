@@ -132,17 +132,23 @@ if len(filtered_df) > 0:
 
     for _, row in filtered_df.iterrows():
         kakao_url = f"https://map.kakao.com/link/map/{row['상호명']},{row['위도']},{row['경도']}"
-        popup_html = f"""
-        <b>{row['상호명']}</b><br>
-        📍 {row['수거장소(주소)']}<br>
-        <a href="{kakao_url}" target="_blank">🧭 길찾기</a>
-        """
+        popup_html = folium.Popup(
+            html=f"""
+                <div style="font-size:13px;">
+                    <b>{row['상호명']}</b><br>
+                    <a href="{kakao_url}" target="_blank">🧭 길찾기</a>
+                </div>
+            """,
+            max_width=180
+        )
+
         folium.Marker(
             location=[row["위도"], row["경도"]],
-            popup=popup_html,
-            tooltip=row["상호명"],
-            icon=folium.Icon(color="blue", icon="info-sign"),
-        ).add_to(marker_cluster)
+	    popup=popup_html,
+  	    tooltip=row["상호명"],
+ 	    icon=folium.Icon(color="cadetblue", icon="info-sign"),
+).add_to(marker_cluster)
+
 
     st_folium(m, width=900, height=600)
 
