@@ -107,13 +107,12 @@ df["자치구"] = df["수거장소(주소)"].str.extract(r"(대전\s?\S+구)")
 df = df.dropna(subset=["위도", "경도", "자치구"])
 
 # ✅ 필터 UI
-col1, col2 = st.columns([1, 2])
-with col1:
-    gu_list = sorted(df["자치구"].dropna().unique())
-selected_gu = st.radio("🏙️ 자치구 선택", gu_list, horizontal=True)
+st.markdown('<h4 style="margin-bottom: px;">🏙️ 자치구 선택</h4>', unsafe_allow_html=True)
+gu_list = sorted(df["자치구"].dropna().unique())
+selected_gu = st.radio("", gu_list, horizontal=True)
 
-with col2:
-    search_term = st.text_input("🔍 수거함 이름 또는 주소 검색")
+st.markdown('<p style="font-size: 15px; margin-top: 20px;">🔍 수거함 이름 또는 주소 검색</p>', unsafe_allow_html=True)
+search_term = st.text_input("", label_visibility="collapsed")
 
 filtered_df = df[df["자치구"] == selected_gu]
 if search_term:
