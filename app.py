@@ -274,4 +274,3 @@ if submitted:
                 st.info("더 나은 서비스를 위해 노력하겠습니다! / We'll work to improve our service!")
     else:
         st.warning("질문을 입력해 주세요. / Please enter your question.")
-s
