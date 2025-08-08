@@ -108,13 +108,20 @@ df = df.dropna(subset=["위도", "경도", "자치구"])
 
 # ✅ 필터 UI
 st.markdown('<h4 style="margin-bottom: px;">🏙️ 자치구 선택</h4>', unsafe_allow_html=True)
-gu_list = sorted(df["자치구"].dropna().unique())
+
+# "전체" 포함한 자치구 목록 만들기
+gu_list = ["전체"] + sorted(df["자치구"].dropna().unique().tolist())
 selected_gu = st.radio("", gu_list, horizontal=True)
 
 st.markdown('<p style="font-size: 15px; margin-top: 20px;">🔍 수거함 이름 또는 주소 검색</p>', unsafe_allow_html=True)
 search_term = st.text_input("", label_visibility="collapsed")
 
-filtered_df = df[df["자치구"] == selected_gu]
+# 필터링 로직
+if selected_gu == "전체":
+    filtered_df = df.copy()
+else:
+    filtered_df = df[df["자치구"] == selected_gu]
+
 if search_term:
     filtered_df = filtered_df[
         filtered_df["상호명"].str.contains(search_term, case=False, na=False)
@@ -122,6 +129,7 @@ if search_term:
     ]
 
 st.markdown(f"🧺 총 **{len(filtered_df)}개**의 수거함이 검색되었습니다.")
+
 
 
 # ✅ 지도 출력
@@ -154,7 +162,7 @@ if len(filtered_df) > 0:
     st_folium(m, width=900, height=600)
 
 # ✅ 수거함 리스트 (2개씩 정렬)
-with st.expander("📋 수거함 리스트 (클릭 시 펼치기)", expanded=True):
+with st.expander("📋 수거함 리스트 (클릭 시 펼치기)", expanded=False):
     for i in range(0, len(filtered_df), 2):
         col1, col2 = st.columns(2)
 
