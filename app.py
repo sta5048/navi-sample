@@ -95,7 +95,7 @@ with st.sidebar:
     st.markdown("**가습기**: ❌ 생활폐기물")
 
 # ✅ 데이터 불러오기
-@st.cache_data
+#@st.cache_data
 def load_data():
     df = pd.read_csv("daejeon_map.csv", encoding="utf-8-sig")
     return df
