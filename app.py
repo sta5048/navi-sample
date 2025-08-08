@@ -4,6 +4,7 @@ import folium
 from streamlit_folium import st_folium
 from folium.plugins import MarkerCluster
 import openai
+from openai import OpenAI
 
 # ✅ OpenAI API 설정 (환경에 따라 설정 방식 변경 가능)
 openai.api_key = st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else "sk-YourAPIKeyHere"
@@ -26,7 +27,9 @@ Response Format:
 - Include disposal procedures if needed
 - End with offer for additional assistance"""
 
-        response = openai.ChatCompletion.create(
+        client = OpenAI()
+
+        response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
