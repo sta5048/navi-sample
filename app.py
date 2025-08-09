@@ -165,16 +165,26 @@ with st.sidebar:
     st.markdown("**밥솥**: ⚠️ 내솥 분리 (내솥은 일반쓰레기일 수 있음)")
     st.markdown("**가습기**: ❌ 생활폐기물")
 
-# ✅ 데이터 불러오기
-def load_data():
-    df = pd.read_csv("daejeon_map.csv", encoding="utf-8-sig")
+import os
+
+# ✅ 데이터 불러오기 (파일 변경 시 자동 무효화)
+@st.cache_data  # 캐시 키에 파일 mtime을 포함해서 변경 시 자동 갱신
+def load_data_cached(csv_path: str, file_mtime: float):
+    df = pd.read_csv(csv_path, encoding="utf-8-sig")
+    df.columns = df.columns.str.strip()
+    df["수거장소(주소)"] = df["수거장소(주소)"].str.replace("대전광역시", "대전", regex=False)
+    df["자치구"] = df["수거장소(주소)"].str.extract(r"(대전\s?\S+구)")
+    df = df.dropna(subset=["위도", "경도", "자치구"])
     return df
 
-df = load_data()
-df.columns = df.columns.str.strip()
-df["수거장소(주소)"] = df["수거장소(주소)"].str.replace("대전광역시", "대전", regex=False)
-df["자치구"] = df["수거장소(주소)"].str.extract(r"(대전\s?\S+구)")
-df = df.dropna(subset=["위도", "경도", "자치구"])
+# ▲▲▲ 캐시 함수 정의 끝
+
+# ▼▼▼ 실제 호출부
+csv_path = "daejeon_map.csv"
+file_mtime = os.path.getmtime(csv_path)  # 파일이 바뀌면 값도 바뀜 → 캐시 자동 갱신
+df = load_data_cached(csv_path, file_mtime)
+# ▲▲▲ 호출부 끝
+
 
 # ✅ 필터 UI
 st.markdown('<h4 style="margin-bottom: px;">🏙️ 자치구 선택</h4>', unsafe_allow_html=True)
